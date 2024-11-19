@@ -54,7 +54,7 @@ from graphrag.query.structured_search.global_search.community_context import Glo
 from graphrag.query.structured_search.global_search.search import GlobalSearch
 from graphrag.vector_stores.lancedb import LanceDBVectorStore
 import textwrap
-
+import argparse
 
 
 # Suppress warnings
@@ -1118,19 +1118,20 @@ def list_folder_contents(folder_path):
     return contents
 
 def update_output_folder_list():
-    root_dir = "./"
+    root_dir = "./indexing"
     folders = list_output_folders(root_dir)
     return gr.update(choices=folders, value=folders[0] if folders else None)
 
 def update_folder_content_list(folder_name):
-    root_dir = "./"
+    root_dir = "./indexing"
     if not folder_name:
         return gr.update(choices=[])
-    contents = list_folder_contents(os.path.join(root_dir, "output", folder_name, "artifacts"))
+    folder_path = os.path.join(root_dir, "output", folder_name, "artifacts")
+    contents = list_folder_contents(folder_path)
     return gr.update(choices=contents)
 
 def handle_content_selection(folder_name, selected_item):
-    root_dir = "./"
+    root_dir = "./indexing"
     if isinstance(selected_item, list) and selected_item:
         selected_item = selected_item[0]  # Take the first item if it's a list
     
@@ -1150,7 +1151,7 @@ def handle_content_selection(folder_name, selected_item):
         return gr.update(), "", ""
 
 def initialize_selected_folder(folder_name):
-    root_dir = "./"
+    root_dir = "./indexing"
     if not folder_name:
         return "Please select a folder first.", gr.update(choices=[])
     folder_path = os.path.join(root_dir, "output", folder_name, "artifacts")
@@ -1312,7 +1313,7 @@ def create_gradio_interface():
                         
 
                     with gr.TabItem("Indexing"):
-                        root_dir = gr.Textbox(label="Root Directory", value="./")
+                        root_dir = gr.Textbox(label="Root Directory", value="./indexing")
                         config_file = gr.File(label="Config File (optional)")
                         with gr.Row():
                             verbose = gr.Checkbox(label="Verbose", value=True)
@@ -1761,7 +1762,9 @@ def create_gradio_interface():
 
 async def main():
     api_port = 8088
-    gradio_port = 7860
+    
+    # if server_port is None use value 7860 for gradio_port
+    gradio_port = server_port if server_port is not None else 7860
 
 
     print(f"Starting API server on port {api_port}")
@@ -1777,10 +1780,15 @@ async def main():
     # Launch the Gradio app
     demo.launch(server_port=gradio_port, share=True)
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Launch the Gradio app with specified server port')
+    parser.add_argument('--server_port', type=int, default=7860, help='Port for Gradio server')
+    return parser.parse_args()
 
 demo = create_gradio_interface()
 app = demo.app
 
 if __name__ == "__main__":
+    args = parse_args()
     initialize_data()
-    demo.launch(server_port=7860, share=True)
+    demo.launch(server_port=args.server_port, share=True)

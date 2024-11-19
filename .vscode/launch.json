@@ -24,5 +24,17 @@
             ],
             "console": "integratedTerminal"
         }
+        ,
+        {
+            "name": "Debug app",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/app.py",
+            "args": [
+                "--server_port",
+                "7862"
+            ],
+            "console": "integratedTerminal"
+        }
     ]
 }

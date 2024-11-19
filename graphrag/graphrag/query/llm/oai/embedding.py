@@ -93,6 +93,17 @@ class OpenAIEmbedding(BaseTextEmbedding, OpenAILLMImpl):
                 )
 
                 continue
+            
+        if not chunk_embeddings:
+            msg = "No valid chunks to embed."
+            raise ValueError(msg)
+
+        chunk_lens_total = sum(chunk_lens)
+        if chunk_lens_total == 0:
+            msg = "Weights sum to zero, can't be normalized."
+            raise ValueError(msg)
+
+    
         chunk_embeddings = np.average(chunk_embeddings, axis=0, weights=chunk_lens)
         chunk_embeddings = chunk_embeddings / np.linalg.norm(chunk_embeddings)
         return chunk_embeddings.tolist()

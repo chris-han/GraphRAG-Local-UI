@@ -260,3 +260,75 @@ This modular approach allows for greater flexibility and easier maintenance of t
 - On Windows, if you run into an encoding/UTF error, you can change it to the correct format in the YAML Settings menu.
 
 For any issues or feature requests, please open an issue on the GitHub repository. Happy knowledge graphing!
+
+## DevOps Tool chain
+```mermaid
+graph TD
+
+    subgraph Configurations
+        F[Config Repository]
+        F1[Poetry pyproject.toml]
+        F2[Git Repository]      
+        F3[gitlab-ci.yml]                           
+        F4[pytest.ini]
+        F5[Semversioner config.yml]
+        F --> F1
+        F --> F2
+        F --> F3
+        F --> F4
+        F --> F5
+    end
+
+    subgraph Pipeline
+        direction LR
+        B[GitLab CI/CD Pipeline]
+        B --> C[Build Stage]
+        B --> D[Test Stage]
+        B --> E[Deploy Stage]
+
+        subgraph "1 Build Stage"
+            direction TB
+            C1[Install Dependencies]
+            C2[Linter/Dependabot/SonarQube]            
+            C3[Compile Code]
+            C --> C1
+            C1 --> C2
+            C2 --> C3
+            
+                    
+        end
+
+        subgraph "2 Test Stage"
+            direction TB
+            D1[Run Unit Tests]
+            D2[Run Integration Tests]
+            D3[Generate Coverage Report]
+            D --> D1
+            D1 --> D2
+            D2 --> D3
+        end
+
+        subgraph "3 Release Stage"
+            direction TB            
+            E1[Deploy to Staging]
+            E2[Run Acceptance Tests]
+            E3[Versioning with Semversioner]
+            E4[Tag in Prod Repo]
+            E5[Deploy to Production]
+            E --> E1
+            E1 --> E2
+            E2 --> E3
+            E3 --> E4
+            E4 --> E5
+        end    
+    end
+
+    F2[Git Repository] -->|Push Code| B
+    F1 --> C1
+    F2 --> C1
+    F3 --> B    
+    F4 --> D1
+    F5 --> E1
+    C -.-> D
+    D -.-> E    
+```
