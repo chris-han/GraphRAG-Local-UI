@@ -1,0 +1,94 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Launch API",
+            "type": "shell",
+            "command": "conda",
+            "args": [
+                "run",
+                "--no-capture-output",
+                "-n", "rag",
+                "python",
+                "${workspaceFolder}/api.py",
+                "--host", "0.0.0.0",
+                "--port", "8012",
+                "--reload"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": false
+            }
+        },
+        {
+            "label": "Launch Embedding Proxy",
+            "type": "shell",
+            "command": "conda",
+            "args": [
+                "run",
+                "--no-capture-output",
+                "-n", "rag",
+                "python",
+                "${workspaceFolder}/embedding_proxy.py",
+                "--port", "11435",
+                "--host", "http://localhost:11434"
+            ],
+            "problemMatcher": [],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": false
+            }
+        },
+        {
+            "label": "Launch Gradio App",
+            "type": "shell",
+            "command": "conda",
+            "args": [
+                "run",
+                "--no-capture-output",
+                "-n", "rag",
+                "python",
+                "${workspaceFolder}/index_app.py"
+            ],
+            "problemMatcher": [],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": false
+            }
+        },
+        {
+            "label": "Launch All Services",
+            "dependsOn": [
+                "Launch API",
+                "Launch Embedding Proxy",
+                "Launch Gradio App"
+            ],
+            "problemMatcher": [],
+            "group": "none",
+            "presentation": {
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false
+            }
+        }
+    ]
+}
