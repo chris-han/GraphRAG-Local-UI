@@ -1,3 +1,4 @@
 output/
 __pycache__/
 20240722-073448/
+.mypy_cache/
