@@ -42,12 +42,14 @@ async def create_embedding(request: EmbeddingRequest):
                 "index": i
             })
             
-
+        usage_data = {
+            "tokens_used": 1024
+        }
         return EmbeddingResponse(
             object="list",
             data=embeddings,
             model=request.model,
-            
+            usage = usage_data            
         )
 
 if __name__ == "__main__":

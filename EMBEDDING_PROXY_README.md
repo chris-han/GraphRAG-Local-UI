@@ -29,8 +29,9 @@ To bridge this gap, let's use an embeddings proxy. This proxy acts as a middlewa
        api_key: ${GRAPHRAG_API_KEY}
        type: openai_embedding
        model: nomic-embed-text:latest
-       api_base: http://localhost:11435  # Point to your proxy
+       api_base: http://localhost:11435/v1  # Point to your proxy
    ```
+    api_base: http://localhost:11435/v1 #adding v1 at the end of the URI to resolve error "POST /embeddings HTTP/1.1" 404 Not Found because @app.post("/v1/embeddings") in embedding_proxy.py fastapi tag specify the entry point
 
 4. **Run GraphRAG:**
    With the proxy running and the configuration updated, you can now run GraphRAG as usual. It will use Ollama for embeddings through the proxy.

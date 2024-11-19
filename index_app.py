@@ -436,7 +436,7 @@ def start_indexing(request: IndexingRequest):
     url = f"{API_BASE_URL}/v1/index"
     
     try:
-        response = requests.post(url, json=request.dict())
+        response = requests.post(url, json=request.model_dump())
         response.raise_for_status()
         result = response.json()
         return result['message'], gr.update(interactive=False), gr.update(interactive=True)

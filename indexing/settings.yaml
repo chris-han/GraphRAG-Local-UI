@@ -4,7 +4,7 @@ skip_workflows: []
 llm:
   api_key: ${GRAPHRAG_API_KEY}
   type: openai_chat # or azure_openai_chat
-  model: mistral-nemo:12b-instruct-2407-fp16
+  model: mistral-nemo:latest
   model_supports_json: true # recommended if this is available for your model.
   max_tokens: 8192
   # request_timeout: 180.0
@@ -32,7 +32,7 @@ embeddings:
     api_key: ${GRAPHRAG_API_KEY}
     type: openai_embedding # or azure_openai_embedding
     model: nomic-embed-text:latest
-    api_base: http://localhost:11434
+    api_base: http://localhost:11435/v1 #adding v1 at the end of the URI to resolve error "POST /embeddings HTTP/1.1" 404 Not Found because @app.post("/v1/embeddings") in embedding_proxy.py fastapi tag specify the entry point
     # api_version: 2024-02-15-preview
     # organization: <organization_id>
     # deployment_name: <azure_model_deployment_name>
